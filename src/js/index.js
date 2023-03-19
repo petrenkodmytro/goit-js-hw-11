@@ -7,6 +7,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const seachFormRef = document.querySelector('.search-form');
 const seachMore = document.querySelector('.load-more');
+const btnUp = document.querySelector('.up');
 const galleryRef = document.querySelector('.gallery');
 
 // фунцція бібліотеки SimpleLightbox
@@ -19,11 +20,13 @@ const simpleLightBox = new SimpleLightbox('.gallery a', {
 
 let seachValue = '';
 let pageNumber;
-
+btnUp.style.display = 'none';
 seachMore.style.display = 'none';
 
 seachFormRef.addEventListener('submit', onSeachImageSubmit);
 seachMore.addEventListener('click', onSeachMoreImageClick);
+window.addEventListener('scroll', scrollFunction);
+btnUp.addEventListener('click', topFunction);
 
 // функція першого пошуку
 async function onSeachImageSubmit(e) {
@@ -185,7 +188,22 @@ function onBtnSeachMoreObserver(entities) {
   const [button] = entities;
   // якщо кнопка в полі зору зробити дозавантаження данних
   if (button.isIntersecting) {
-    console.log('isIntersecting', button.isIntersecting);
+    // console.log('isIntersecting', button.isIntersecting);
     onSeachMoreImageClick();
   }
+}
+
+// функція скролу
+function scrollFunction() {
+  if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+    btnUp.style.display = 'block';
+  } else {
+    btnUp.style.display = 'none';
+  }
+}
+
+// функція повернення на початок сторінки
+function topFunction() {
+  console.log('ooooo');
+  document.documentElement.scrollTo({ top: 0, behavior: 'smooth' }); // Для Chrome, Firefox, IE и Opera
 }
