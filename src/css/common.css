@@ -13,11 +13,26 @@ body {
   background-color: #fafafa;
   color: #212121;
   line-height: 1.5;
-  background-color: rgba(222, 242, 244, 0.748);
+  
+
+  background-image: url(../image/img-1.jpeg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 img {
   display: block;
   max-width: 100%;
+}
+.title {
+  font-size: 15px;
+  color: #fff;
+  width: 390px;
+  margin: 20px auto;
+  text-align: center;
+  letter-spacing: 10px;
+  text-shadow: -3px -3px 20px #fff, 5px 5px 20px #919dcc;
 }
 /* ---form--- */
 .search-form {
@@ -28,7 +43,7 @@ img {
   justify-content: space-between;
   align-items: center;
   column-gap: 10px;
-  margin: 25px auto;
+  margin: 20px auto;
   padding: 8px 12px;
   font-size: 1em;
   display: flex;
@@ -98,6 +113,7 @@ img {
   display: flex;
   flex-direction: row;
   align-items: center;
+  background-color: rgba(190, 238, 243, 0.9);
 }
 .info-item {
   display: flex;
