@@ -43,26 +43,28 @@ async function onSeachImageSubmit(e) {
   const response = await fetchData(seachValue, pageNumber);
   // console.log(response.data);
 
-  if (response.data.hits.length === 0) {
-    Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
-    seachFormRef.reset();
-    return;
-  }
-  if (response.data.hits.length < 40) {
-    Notiflix.Notify.info(
-      "We're sorry, but you've reached the end of search results."
-    );
-    seachMore.style.display = 'none';
-  }
-  if (response.data.hits.length >= 40) {
-    pageNumber += 1;
-    seachMore.style.display = 'block';
-  }
+  isCheckedLengthOfArrayImage(response);
+
+  // if (response.data.hits.length === 0) {
+  //   Notiflix.Notify.failure(
+  //     'Sorry, there are no images matching your search query. Please try again.'
+  //   );
+  //   seachFormRef.reset();
+  //   return;
+  // }
+  // if (response.data.hits.length < 40) {
+  //   Notiflix.Notify.info(
+  //     "We're sorry, but you've reached the end of search results."
+  //   );
+  //   seachMore.style.display = 'none';
+  // }
+  // if (response.data.hits.length >= 40) {
+  //   pageNumber += 1;
+  //   seachMore.style.display = 'block';
+  // }
 
   createMarkupGallary(response.data.hits);
-  Notiflix.Notify.success(`Hooray! We found ${response.data.total} images.`);
+  // Notiflix.Notify.success(`Hooray! We found ${response.data.total} images.`);
   simpleLightBox.refresh();
 }
 
@@ -108,7 +110,7 @@ async function fetchData(query, pageNumber) {
   }
 }
 
-//створюємо розмітку галереї
+// створюємо розмітку галереї
 function createMarkupGallary(arryOfImages) {
   const markup = arryOfImages
     .map(
@@ -145,4 +147,45 @@ function createMarkupGallary(arryOfImages) {
     .join('');
 
   galleryRef.insertAdjacentHTML('beforeend', markup);
+}
+
+// функція перевірка данних з бекенду
+function isCheckedLengthOfArrayImage(response) {
+  if (response.data.hits.length === 0) {
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+    seachFormRef.reset();
+    return;
+  }
+  if (response.data.hits.length < 40) {
+    Notiflix.Notify.success(`Hooray! We found ${response.data.total} images.`);
+    Notiflix.Notify.info(
+      "We're sorry, but you've reached the end of search results."
+    );
+    seachMore.style.display = 'none';
+
+    return;
+  }
+  if (response.data.hits.length >= 40) {
+    Notiflix.Notify.success(`Hooray! We found ${response.data.total} images.`);
+    pageNumber += 1;
+    seachMore.style.display = 'block';
+    return;
+  }
+}
+
+// Intersection Observer - автоматичне завантаження при скролі
+const pageObserver = new IntersectionObserver(onBtnSeachMoreObserver);
+
+pageObserver.observe(seachMore);
+
+function onBtnSeachMoreObserver(entities) {
+  // деструктуризація масива entities, перший елемент назвем button
+  const [button] = entities;
+  // якщо кнопка в полі зору зробити дозавантаження данних
+  if (button.isIntersecting) {
+    console.log('isIntersecting', button.isIntersecting);
+    onSeachMoreImageClick();
+  }
 }
