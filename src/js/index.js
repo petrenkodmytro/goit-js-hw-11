@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Notiflix from 'notiflix';
+import { Notify, Loading } from 'notiflix'; // Loading - it is a spiner
 // Описаний в документації
 import SimpleLightbox from 'simplelightbox';
 // Додатковий імпорт стилів
@@ -31,12 +31,12 @@ btnUp.addEventListener('click', topFunction);
 // функція першого пошуку
 async function onSeachImageSubmit(e) {
   e.preventDefault();
-
+  Loading.arrows();
   galleryRef.innerHTML = '';
   seachValue = e.currentTarget.elements.searchQuery.value.trim();
 
   if (seachValue === '') {
-    Notiflix.Notify.info('Please enter something for seach.');
+    Notify.info('Please enter something for seach.');
     seachMore.style.display = 'none';
     return;
   }
@@ -69,14 +69,16 @@ async function onSeachImageSubmit(e) {
   createMarkupGallary(response.data.hits);
   // Notiflix.Notify.success(`Hooray! We found ${response.data.total} images.`);
   simpleLightBox.refresh();
+  Loading.remove();
 }
 
 // функція наступного пошуку
 async function onSeachMoreImageClick() {
+  Loading.arrows();
   const response = await fetchData(seachValue, pageNumber);
 
   if (response.data.hits.length < 40) {
-    Notiflix.Notify.info(
+    Notify.info(
       "We're sorry, but you've reached the end of search results."
     );
     seachMore.style.display = 'none';
@@ -87,6 +89,7 @@ async function onSeachMoreImageClick() {
   pageNumber += 1;
   // console.log(response.data);
   simpleLightBox.refresh();
+  Loading.remove();
 }
 
 // функція запиту на бекенд
@@ -155,15 +158,15 @@ function createMarkupGallary(arryOfImages) {
 // функція перевірка данних з бекенду
 function isCheckedLengthOfArrayImage(response) {
   if (response.data.hits.length === 0) {
-    Notiflix.Notify.failure(
+    Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
     seachFormRef.reset();
     return;
   }
   if (response.data.hits.length < 40) {
-    Notiflix.Notify.success(`Hooray! We found ${response.data.total} images.`);
-    Notiflix.Notify.info(
+    Notify.success(`Hooray! We found ${response.data.total} images.`);
+    Notify.info(
       "We're sorry, but you've reached the end of search results."
     );
     seachMore.style.display = 'none';
@@ -171,7 +174,7 @@ function isCheckedLengthOfArrayImage(response) {
     return;
   }
   if (response.data.hits.length >= 40) {
-    Notiflix.Notify.success(`Hooray! We found ${response.data.total} images.`);
+    Notify.success(`Hooray! We found ${response.data.total} images.`);
     pageNumber += 1;
     seachMore.style.display = 'block';
     return;
